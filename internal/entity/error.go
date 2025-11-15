@@ -8,10 +8,12 @@ type ErrorResponse struct {
 type ErrorCode string
 
 const (
-	TeamExists  ErrorCode = "TEAM_EXISTS"
-	PRExists    ErrorCode = "PR_EXISTS"
-	PRMerged    ErrorCode = "PR_MERGED"
-	NotAssigned ErrorCode = "NOT_ASSIGNED"
-	NoCandidate ErrorCode = "NO_CANDIDATE"
-	NotFound    ErrorCode = "NOT_FOUND"
+	TeamExists     ErrorCode = "TEAM_EXISTS"
+	PRExists       ErrorCode = "PR_EXISTS"
+	PRMerged       ErrorCode = "PR_MERGED"
+	NotAssigned    ErrorCode = "NOT_ASSIGNED"
+	NoCandidate    ErrorCode = "NO_CANDIDATE"
+	NotFound       ErrorCode = "NOT_FOUND"
+	InvalidRequest ErrorCode = "INVALID_REQUEST"
+	InternalServer ErrorCode = "INTERNAL_SERVER_ERROR"
 )

@@ -6,8 +6,8 @@ type PullRequest struct {
 	ID              string
 	Name            string
 	AuthorID        string
-	Status          PRStatus
-	AssignReviewers []User
+	Status          string
+	AssignReviewers []string
 	CreatedAt       *time.Time
 	MergedAt        *time.Time
 }
@@ -16,12 +16,10 @@ type PullRequestShort struct {
 	ID       string
 	Name     string
 	AuthorID string
-	Status   PRStatus
+	Status   string
 }
 
-type PRStatus string
-
 const (
-	OPEN   PRStatus = "OPEN"
-	MERGED PRStatus = "MERGED"
+	OPEN   = "OPEN"
+	MERGED = "MERGED"
 )

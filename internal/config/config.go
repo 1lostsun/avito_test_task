@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	Postgres *pg.Config
+	AppPort  string
 }
 
 func New(ctx context.Context) *Config {
@@ -15,7 +16,7 @@ func New(ctx context.Context) *Config {
 		Postgres: &pg.Config{},
 	}
 
-	if err := loadSecretsFromVault(ctx, cfg); err != nil {
+	if err := loadSecretsFromVault(ctx, &cfg); err != nil {
 		slog.Error(err.Error())
 	}
 

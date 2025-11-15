@@ -27,6 +27,7 @@ services:
     build:
       context: .
       dockerfile: Postgres.Dockerfile
+    entrypoint: ["/docker-entrypoint-vault.sh"]
     container_name: postgres
     restart: unless-stopped
     depends_on:
@@ -57,7 +58,9 @@ services:
   app:
     build:
       context: ..
-      dockerfile: ../app.Dockerfile
+      dockerfile: infra/app.Dockerfile
+    ports:
+      - "8080:8080"
     depends_on:
       vault:
         condition: service_healthy
@@ -66,6 +69,8 @@ services:
     environment:
       VAULT_ADDR: http://vault:8200
       VAULT_TOKEN: root
+      PORT: 8080
+      DATABASE_URL: postgres://user:password@postgres:5432/avito-test-task-db?sslmode=disable
     networks:
       - app-network
 

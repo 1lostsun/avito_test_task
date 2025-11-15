@@ -18,6 +18,7 @@ vault kv put secret/avito-test-task \
   PG_PASSWORD=postgres \
   PG_DATABASE=avito-test-task-db \
   PG_HOST=postgres \
-  PG_PORT=5432
+  PG_PORT=5432 \
+  APP_PORT=8080
 
 echo "Secrets initialized. You can now run: docker compose up"

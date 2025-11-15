@@ -22,4 +22,8 @@ fi
 
 echo "Postgres credentials loaded from Vault, starting postgres..."
 
+echo "DEBUG: POSTGRES_USER=$POSTGRES_USER"
+echo "DEBUG: POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
+echo "DEBUG: POSTGRES_DB=$POSTGRES_DB"
+
 exec docker-entrypoint.sh "$@"
