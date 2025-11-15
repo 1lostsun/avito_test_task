@@ -1,3 +1,4 @@
 .idea
 infra/init-databases.sql
 infra/vault
+infra/infra/prometheus/prometheus.yml

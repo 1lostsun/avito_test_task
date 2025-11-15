@@ -27,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Postgres.Dockerfile
-    entrypoint: ["/docker-entrypoint-vault.sh"]
+    entrypoint: [ "/docker-entrypoint-vault.sh" ]
     container_name: postgres
     restart: unless-stopped
     depends_on:
@@ -54,6 +54,11 @@ services:
       -c checkpoint_completion_target=0.9
       -c wal_buffers=16MB
       -c default_statistics_target=100
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   app:
     build:
@@ -65,7 +70,7 @@ services:
       vault:
         condition: service_healthy
       postgres:
-        condition: service_started
+        condition: service_healthy
     environment:
       VAULT_ADDR: http://vault:8200
       VAULT_TOKEN: root
@@ -74,9 +79,34 @@ services:
     networks:
       - app-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - app-network
+    volumes:
+      - grafana_data:/var/lib/grafana
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
   postgres_data:
+  grafana_data:

@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"avito_test_task/internal/mddleware"
+	"avito_test_task/internal/middleware"
 	"avito_test_task/internal/usecase"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Handler struct {
@@ -17,8 +18,10 @@ func New(uc *usecase.UseCase) *Handler {
 }
 
 func (h *Handler) InitRoutes(r *gin.Engine) {
-	requireAdmin := mddleware.RequireAdmin()
-	requireUserOrAdmin := mddleware.RequireAdminOrUser()
+	r.Use(middleware.PrometheusMiddleware())
+
+	requireAdmin := middleware.RequireAdmin()
+	requireUserOrAdmin := middleware.RequireAdminOrUser()
 
 	// Teams
 	team := r.Group("avito-test-task/team")
@@ -42,5 +45,6 @@ func (h *Handler) InitRoutes(r *gin.Engine) {
 		pullRequests.POST("/reassign", requireAdmin, h.ReassignPR)
 	}
 
-	// TODO stats endpoints
+	// metrics endpoint
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 }
