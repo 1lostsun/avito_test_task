@@ -1,14 +1,12 @@
 package entity
 
-type User struct {
-	UserID   string
-	Name     string
-	TeamName string
-	IsActive bool
-}
+import "time"
 
-type TeamMember struct {
-	UserID   string
-	Name     string
-	IsActive bool
+type User struct {
+	UserID    string
+	Name      string
+	TeamName  string
+	IsActive  bool
+	CreatedAt *time.Time
+	UpdatedAt *time.Time
 }

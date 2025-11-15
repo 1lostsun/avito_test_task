@@ -1,1 +1,0 @@
-CREATE TYPE pr_status AS ENUM ('OPEN', 'MERGED');

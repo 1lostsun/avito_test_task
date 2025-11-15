@@ -7,7 +7,7 @@ import (
 	"log/slog"
 )
 
-func loadSecretsFromVault(ctx context.Context, cfg Config) error {
+func loadSecretsFromVault(ctx context.Context, cfg *Config) error {
 	client, err := vault.New(vault.WithEnvironment())
 	if err != nil {
 		slog.Error("error creating vault client")
@@ -44,6 +44,10 @@ func loadSecretsFromVault(ctx context.Context, cfg Config) error {
 
 	if v, ok := data["PG_PORT"].(string); ok && v != "" {
 		cfg.Postgres.Port = v
+	}
+
+	if v, ok := data["APP_PORT"].(string); ok && v != "" {
+		cfg.AppPort = v
 	}
 
 	return nil

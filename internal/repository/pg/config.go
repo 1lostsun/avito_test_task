@@ -1,8 +1,12 @@
 package pg
 
 import (
+	"errors"
 	"fmt"
-	"os"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"log/slog"
 )
 
 type Config struct {
@@ -14,6 +18,22 @@ type Config struct {
 }
 
 func (c *Config) PostgresDSN() string {
-	fmt.Println(os.Getenv("PG_PORT"))
-	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", c.Username, c.Password, c.Host, c.Port, c.Database)
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", c.Username, c.Password, c.Host, c.Port, c.Database)
+	slog.Info("connecting to DB", slog.String("dsn", dsn))
+	return dsn
+}
+
+func RunMigrations(dsn string) {
+	m, err := migrate.New("file://migrations", dsn)
+	if err != nil {
+		slog.Error("failed to create migrator", "error", err)
+		return
+	}
+
+	if err := m.Up(); err != nil && !errors.Is(migrate.ErrNoChange, err) {
+		slog.Error(fmt.Sprintf("error running migrations: %v", err))
+		return
+	}
+
+	slog.Info("Migrations applied successfully")
 }
